@@ -109,6 +109,25 @@ public class Query {
 	   }
 	   return result;
    }
+   
+   private static void bagOfWords(String input) throws RecognitionException {
+		if(input.contains("*")){
+			   String s = join(takeOutQueryTerms(input), "or");
+		       System.out.println("Entered query is replaced by this boolean query: " + s);
+			   Query q2 = new Query(s);
+		       List<Integer> r2 = q2.getResult();
+		       System.out.println(r2);
+		   }
+		   else{
+		       System.out.printf("K: %d\n",K_TOP);
+			   List <String> queryParsed = takeOutQueryTerms(input);
+		       System.out.println("High-idf turned off:");
+		       System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, false));
+		       System.out.println("High-idf turned on:");
+		       System.out.println("Ignored term(s): ");
+		       System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, true));
+		   }
+   }
 
    public static void main(String[] args) throws Exception {
        // trim the input, insert and instead of spaces, lowercase
@@ -127,11 +146,6 @@ public class Query {
            System.out.println("Done.");
        }
 
-//       int mode = MODE_BAG_OF_WORDS;
-       
-//       for(Integer i : DocumentIndex.instance().document_IDs_And_Lenghts.keySet())
-//    	   System.out.println(i + " : " + DocumentIndex.instance().document_IDs_And_Lenghts.get(i));
-//       System.out.println(DocumentIndex.instance().getTermPostingList("electricite"));
        while (true) {
            Scanner in = new Scanner(System.in);
 
@@ -151,26 +165,11 @@ public class Query {
                System.out.println(r);
                
                if (!input.trim().contains(" "))
-            	   throw new RuntimeException();
+            	   bagOfWords(input);
 
            } catch (Exception ex) { 			// Bag of words
 
-        	   if(input.contains("*")){
-        		   String s = join(takeOutQueryTerms(input), "or");
-                   System.out.println("Entered query is replaced by this boolean query: " + s);
-        		   Query q2 = new Query(s);
-                   List<Integer> r2 = q2.getResult();
-                   System.out.println(r2);
-        	   }
-        	   else{
-                   System.out.printf("K: %d\n",K_TOP);
-        		   List <String> queryParsed = takeOutQueryTerms(input);
-                   System.out.println("High-idf turned off:");
-                   System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, false));
-                   System.out.println("High-idf turned on:");
-                   System.out.println("Ignored term(s): ");
-                   System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, true));
-        	   }
+        	   bagOfWords(input);
            }
        }
    }
