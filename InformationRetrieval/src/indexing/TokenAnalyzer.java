@@ -6,8 +6,13 @@ package indexing;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
+
+
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.englishStemmer;
 
@@ -42,6 +47,8 @@ public class TokenAnalyzer {
         }
     }
     
+    //public static HashMap<String, List<String>> stemmedToNonStemmed = new HashMap<String, List<String>>();
+    
     public static String Stem(String term)
     {
     	englishStemmer stemmer = new englishStemmer();
@@ -64,7 +71,7 @@ public class TokenAnalyzer {
     }
 // ----------------------------------------------------------------------------
     
-    public String getNextToken() {
+    public String getNextToken(/*boolean isQuery*/) {
         String term = null;
         boolean quit = false;
         while (!quit && scanner.hasNext()) {
@@ -91,6 +98,21 @@ public class TokenAnalyzer {
 //        			? PermutermFacilities.shiftWildCardToEnd(term)
 //        			: term;
 // ---------------------------------------------------
+        
+//        String stemmed = Stem(term);
+        
+//        if (!isQuery)
+//        {
+//        	List<String> beforeStemmingWord;
+//        	if (!stemmedToNonStemmed.containsKey(stemmed))
+//    		{
+//    			beforeStemmingWord = new ArrayList<String>();
+//    			stemmedToNonStemmed.put(stemmed, beforeStemmingWord);
+//    		}
+//        	
+//        	stemmedToNonStemmed.get(stemmed).add(term);        	
+//        }
+//        return stemmed;
         return term;
     }
     

@@ -124,6 +124,7 @@ public class DocumentIndex implements Serializable {
             HashMap<String, Integer> terms = new HashMap<String, Integer>();
 
             while ((term = ta.getNextToken()) != null) {
+            	                
                 Integer tf = terms.get(term);
                 if (tf == null) {
                     tf = new Integer(0);
@@ -142,8 +143,6 @@ public class DocumentIndex implements Serializable {
                 term = (String) it.next();
                 Integer termFrequency = terms.get(term);
                 
-                String beforeStemmingTerm = term;
-                term = TokenAnalyzer.Stem(term);
 //
 //                String permuterm = PermutermFacilities.shiftWildCardToEnd(term);
 //                TermPosting tp = termPostings.get(permuterm);
@@ -151,16 +150,24 @@ public class DocumentIndex implements Serializable {
 //                    tp = new TermPosting(term);
 //                }
 //                
-//                tp.postingList.put(docid, termFrequency);
-//                tp.termFrequencySum += termFrequency;
-//                tp.documentFrequency++;
+//               
                 
                 //soundex
                 //System.out.println("- " + term + " -");
                 
                 TermPosting tp = termPostings.get(term);
-                if (!tp.beforeStemmedWord.contains(beforeStemmingTerm))
-                	tp.beforeStemmedWord.add(beforeStemmingTerm);
+	            if (tp == null) 
+	            {
+	            	tp = new TermPosting(term);
+	            }
+	            
+	            tp.postingList.put(docid, termFrequency);
+	            tp.termFrequencySum += termFrequency;
+	            tp.documentFrequency++;
+	            //tp.beforeStemmedWord = TokenAnalyzer.stemmedToNonStemmed.get(term);
+	            
+//                if (!tp.beforeStemmedWord.contains(beforeStemmingTerm))
+//                	tp.beforeStemmedWord.add(beforeStemmingTerm); 
                 
                 Soundex.addSoundex(term, tp);
                 

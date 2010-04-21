@@ -25,7 +25,7 @@ public class TermPosting implements Comparable, Serializable {
     public int documentFrequency;
     public TreeMap<Integer, Integer> postingList;
     
-    public List<String> beforeStemmedWord = new ArrayList<String>();
+    //public List<String> beforeStemmedWord = new ArrayList<String>();
     
     // stop word list
     public static List<Integer> STOP_WORD_LIST= new ArrayList<Integer>();
