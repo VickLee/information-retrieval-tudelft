@@ -128,6 +128,15 @@ public class Query {
 		       System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, true));
 		   }
    }
+   
+   private static void booleanQueries(String input) throws RecognitionException {
+		Query q = new Query(input);
+		   List<Integer> r = q.getResult(); 
+		   System.out.println(r);
+		   
+		   if (!input.trim().contains(" "))
+			   bagOfWords(input);
+	}
 
    public static void main(String[] args) throws Exception {
        // trim the input, insert and instead of spaces, lowercase
@@ -157,15 +166,12 @@ public class Query {
            input = input.toLowerCase().trim();
 
            String soundex = Soundex.guessSoundex(input);
+           
            if (soundex != null)
                System.out.println("Did you mean: " + soundex);
+          
            try { 								// Try boolean
-               Query q = new Query(input);
-               List<Integer> r = q.getResult(); 
-               System.out.println(r);
-               
-               if (!input.trim().contains(" "))
-            	   bagOfWords(input);
+               booleanQueries(input);
 
            } catch (Exception ex) { 			// Bag of words
 
