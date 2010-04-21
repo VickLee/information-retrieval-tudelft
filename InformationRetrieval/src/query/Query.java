@@ -76,6 +76,9 @@ public class Query {
        String term = null;
 
        while ((term = ta.getNextToken()) != null) {
+    	   
+    	   //term = TokenAnalyzer.Stem(term);
+    	   
            if (!out.contains(term))
                out.add(term);
        }
