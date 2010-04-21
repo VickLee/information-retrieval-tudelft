@@ -141,6 +141,9 @@ public class DocumentIndex implements Serializable {
             while (it.hasNext()) {
                 term = (String) it.next();
                 Integer termFrequency = terms.get(term);
+                
+                String beforeStemmingTerm = term;
+                term = TokenAnalyzer.Stem(term);
 //
 //                String permuterm = PermutermFacilities.shiftWildCardToEnd(term);
 //                TermPosting tp = termPostings.get(permuterm);
@@ -154,7 +157,11 @@ public class DocumentIndex implements Serializable {
                 
                 //soundex
                 //System.out.println("- " + term + " -");
+                
                 TermPosting tp = termPostings.get(term);
+                if (!tp.beforeStemmedWord.contains(beforeStemmingTerm))
+                	tp.beforeStemmedWord.add(beforeStemmingTerm);
+                
                 Soundex.addSoundex(term, tp);
                 
                 //term = PermutermFacilities.translateToPostfixWildcard(term);
