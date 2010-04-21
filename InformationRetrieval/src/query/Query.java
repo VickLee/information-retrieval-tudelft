@@ -130,12 +130,12 @@ public class Query {
    }
    
    private static void booleanQueries(String input) throws RecognitionException {
-		Query q = new Query(input);
-		   List<Integer> r = q.getResult(); 
-		   System.out.println(r);
-		   
-		   if (!input.trim().contains(" "))
-			   bagOfWords(input);
+	   Query q = new Query(input);
+	   List<Integer> r = q.getResult(); 
+	   System.out.println(r);
+	   
+	   if (!input.trim().contains(" "))
+		   bagOfWords(input);
 	}
 
    public static void main(String[] args) throws Exception {
