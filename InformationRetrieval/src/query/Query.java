@@ -172,9 +172,7 @@ public class Query {
           
            try { 								// Try boolean
                booleanQueries(input);
-
            } catch (Exception ex) { 			// Bag of words
-
         	   bagOfWords(input);
            }
        }
