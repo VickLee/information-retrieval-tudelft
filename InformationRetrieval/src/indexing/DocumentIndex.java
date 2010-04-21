@@ -77,10 +77,12 @@ public class DocumentIndex implements Serializable {
     		if (tp == null) return Collections.emptyList();
     		
     		result.addAll(tp.postingList.keySet());
-    	} else {
+    	} else if (term.indexOf("*") != term.lastIndexOf("*")) {
     		// retreive all the posting lists that match the wildcard
     		term = PermutermFacilities.removePostfixWildcard(term);
-//    		term.index
+    		
+    		String otherWildCards = term.substring(0, term.lastIndexOf("*")); // from 0 to '*' excluded
+    		term = term.substring(term.lastIndexOf("*")+1); // from '*' excluded to end
     		
     		Map.Entry<String, TermPosting> entry = termPostings.ceilingEntry(term);
     		if (entry == null) return Collections.emptyList();
@@ -88,7 +90,25 @@ public class DocumentIndex implements Serializable {
     		
     		String regex = term.replace("$", "\\$") + "*";
     		regex = regex.replaceAll("\\*", ".\\*");
+    		String regexRestofWildCards = ".*" + otherWildCards.replaceAll("\\*",".\\*") + ".*" ;
     		System.out.println(regex);
+    		if (Pattern.matches(regex, entry.getKey()) && Pattern.matches(regexRestofWildCards, entry.getKey()))
+    			result.addAll(entry.getValue().postingList.keySet());
+    		
+    		while ((entry = termPostings.higherEntry(entry.getKey())) != null && Pattern.matches(regex, entry.getKey()) ) {
+    			
+    			if(Pattern.matches(regexRestofWildCards, entry.getKey())){
+        			List<Integer> result2 = new ArrayList(entry.getValue().postingList.keySet());
+        			result = TermPosting.orLists(result, result2);
+    			}
+    		}
+    		   		
+    	} else {
+    		term = PermutermFacilities.removePostfixWildcard(term);
+    		Map.Entry<String, TermPosting> entry = termPostings.ceilingEntry(term);
+    		if (entry == null) return Collections.emptyList();
+
+    		String regex = term.replace("$", "\\$") + ".*";
     		if (Pattern.matches(regex, entry.getKey()))
     			result.addAll(entry.getValue().postingList.keySet());
     		
@@ -96,7 +116,7 @@ public class DocumentIndex implements Serializable {
     			List<Integer> result2 = new ArrayList(entry.getValue().postingList.keySet());
     			result = TermPosting.orLists(result, result2);
     		}
-    		   		
+
     	}
         
         return result;
@@ -142,10 +162,13 @@ public class DocumentIndex implements Serializable {
             while (it.hasNext()) {
                 term = (String) it.next();
                 Integer termFrequency = terms.get(term);
-                
+
 //
 //                String permuterm = PermutermFacilities.shiftWildCardToEnd(term);
 //                TermPosting tp = termPostings.get(permuterm);
+//  		      if (tp == null) {
+//		        	  tp = new TermPosting(term);
+//		          }
 //                if (tp == null) {
 //                    tp = new TermPosting(term);
 //                }
@@ -154,8 +177,13 @@ public class DocumentIndex implements Serializable {
                 
                 //soundex
                 //System.out.println("- " + term + " -");
-                
+
+
                 TermPosting tp = termPostings.get(term);
+
+
+//                if (!tp.beforeStemmedWord.contains(beforeStemmingTerm))
+//                	tp.beforeStemmedWord.add(beforeStemmingTerm);
 	            if (tp == null) 
 	            {
 	            	tp = new TermPosting(term);
@@ -170,6 +198,7 @@ public class DocumentIndex implements Serializable {
 //                	tp.beforeStemmedWord.add(beforeStemmingTerm); 
                 
                 Soundex.addSoundex(term, tp);
+
                 
                 //term = PermutermFacilities.translateToPostfixWildcard(term);
                 
