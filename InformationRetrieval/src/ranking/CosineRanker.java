@@ -16,6 +16,7 @@ public class CosineRanker {
 	
 	static private double MIN_SPECIALITY = 1;
 
+
 	private CosineRanker(){}
 	
 	public static List<Integer> rankingResults (List <String> inputQueryList, int k_top, boolean highIDF){
