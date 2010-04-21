@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashSet;
 import java.util.Scanner;
+import org.tartarus.snowball.SnowballStemmer;
+import org.tartarus.snowball.ext.englishStemmer;
 
 /**
  *
@@ -38,6 +40,14 @@ public class TokenAnalyzer {
         for (String stopWord : STOP_WORDS) {
             stopTable.add(stopWord);
         }
+    }
+    
+    public static String Stem(String term)
+    {
+    	englishStemmer stemmer = new englishStemmer();
+		stemmer.setCurrent(term);
+		stemmer.stem();
+		return stemmer.getCurrent();
     }
 
     public TokenAnalyzer(File txtFile) throws FileNotFoundException {
