@@ -47,15 +47,9 @@ public class TokenAnalyzer {
         }
     }
     
-    //public static HashMap<String, List<String>> stemmedToNonStemmed = new HashMap<String, List<String>>();
+//    public static HashMap<String, List<String>> stemmedToNonStemmed = new HashMap<String, List<String>>();
     
-    public static String Stem(String term)
-    {
-    	englishStemmer stemmer = new englishStemmer();
-		stemmer.setCurrent(term);
-		stemmer.stem();
-		return stemmer.getCurrent();
-    }
+   
 
     public TokenAnalyzer(File txtFile) throws FileNotFoundException {
         // Token analyzer is simple scanner using several characters as delimitter
@@ -71,7 +65,7 @@ public class TokenAnalyzer {
     }
 // ----------------------------------------------------------------------------
     
-    public String getNextToken(/*boolean isQuery*/) {
+    public String getNextToken() {
         String term = null;
         boolean quit = false;
         while (!quit && scanner.hasNext()) {
@@ -99,8 +93,8 @@ public class TokenAnalyzer {
 //        			: term;
 // ---------------------------------------------------
         
-//        String stemmed = Stem(term);
-        
+ //       String stemmed = Stem(term);
+      
 //        if (!isQuery)
 //        {
 //        	List<String> beforeStemmingWord;
@@ -113,11 +107,20 @@ public class TokenAnalyzer {
 //        	stemmedToNonStemmed.get(stemmed).add(term);        	
 //        }
 //        return stemmed;
-        return term;
+        
+        return DocumentIndex.stemming ? stem(term) : term;
     }
     
     public static boolean isStopWord(String term) {
     	term = term.replaceAll("" + PermutermFacilities.PERMUTERM_SYMBOL, "");
     	return stopTable.contains(term);
     }
+    
+	 public static String stem(String term)
+	    {
+	    	englishStemmer stemmer = new englishStemmer();
+			stemmer.setCurrent(term);
+			stemmer.stem();
+			return stemmer.getCurrent();
+	    }
 }

@@ -134,9 +134,10 @@ public class Query {
    
    private static void booleanQueries(String input) throws RecognitionException {
 
-	   if (!input.trim().contains(" ") && !input.contains("*"))
-	   bagOfWords(input);
-	   
+	   if (!input.trim().contains(" ") && !input.contains("*")){
+		   bagOfWords(input);
+		   return;
+	   }
 	   Query q = new Query(input);
 	   List<Integer> r = q.getResult(); 
 	   System.out.println(r);
@@ -147,20 +148,16 @@ public class Query {
    public static void main(String[] args) throws Exception {
        // trim the input, insert and instead of spaces, lowercase
 
-       File db = new File("reuters.db");
-       // DocumentIndex index = null;
+	   DocumentIndex.stemming = false;
+       manageDB("reuters.db");
+       
+       DocumentIndex.stemming = true;
+       manageDB("reuters_stemmed.db");
 
-       if (!db.exists()) {
-           System.out.println("Creating index...");
-           DocumentIndex.instance().createIndex("reutersTXT/");
-           DocumentIndex.instance().save("reuters.db");
-           System.out.println("Done.");
-       } else {
-           System.out.println("Loading index...");
-           DocumentIndex.instance().load("reuters.db");
-           System.out.println("Done.");
-       }
-
+       
+       //TODO get stemming
+       DocumentIndex.stemming = true;
+       
        while (true) {
            Scanner in = new Scanner(System.in);
 
@@ -179,9 +176,26 @@ public class Query {
            try { 								// Try boolean
                booleanQueries(input);
            } catch (Exception ex) { 			// Bag of words
-        	   System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
+        	   System.out.println("Exception");
         	   bagOfWords(input);
            }
        }
    }
+
+	private static void manageDB(String dbName) throws Exception {
+		File db = new File(dbName);
+	       // DocumentIndex index = null;
+	
+	       if (!db.exists()) {
+	    	   
+	           System.out.println("Creating index...");
+	           DocumentIndex.instance().createIndex("reutersTXT/");
+	           DocumentIndex.instance().save(dbName);
+	           System.out.println("Done.");
+	       } else {
+	           System.out.println("Loading index...");
+	           DocumentIndex.instance().load(dbName);
+	           System.out.println("Done.");
+	       }
+	}
 }
