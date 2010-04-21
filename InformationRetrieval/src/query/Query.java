@@ -111,14 +111,14 @@ public class Query {
    }
    
    private static void bagOfWords(String input) throws RecognitionException {
-		if(input.contains("*")){
-			   String s = join(takeOutQueryTerms(input), "or");
-		       System.out.println("Entered query is replaced by this boolean query: " + s);
-			   Query q2 = new Query(s);
-		       List<Integer> r2 = q2.getResult();
-		       System.out.println(r2);
-		   }
-		   else{
+//		if(input.contains("*")){
+//			   String s = join(takeOutQueryTerms(input), "or");
+//		       System.out.println("Entered query is replaced by this boolean query: " + s);
+//			   Query q2 = new Query(s);
+//		       List<Integer> r2 = q2.getResult();
+//		       System.out.println(r2);
+//		   }
+//		   else{
 		       System.out.printf("K: %d\n",K_TOP);
 			   List <String> queryParsed = takeOutQueryTerms(input);
 		       System.out.println("High-idf turned off:");
@@ -126,16 +126,19 @@ public class Query {
 		       System.out.println("High-idf turned on:");
 		       System.out.println("Ignored term(s): ");
 		       System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, true));
-		   }
+//		   }
    }
    
    private static void booleanQueries(String input) throws RecognitionException {
+
+	   if (!input.trim().contains(" ") && !input.contains("*"))
+	   bagOfWords(input);
+	   
 	   Query q = new Query(input);
 	   List<Integer> r = q.getResult(); 
 	   System.out.println(r);
 	   
-	   if (!input.trim().contains(" "))
-		   bagOfWords(input);
+
 	}
 
    public static void main(String[] args) throws Exception {
@@ -173,6 +176,7 @@ public class Query {
            try { 								// Try boolean
                booleanQueries(input);
            } catch (Exception ex) { 			// Bag of words
+        	   System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe");
         	   bagOfWords(input);
            }
        }

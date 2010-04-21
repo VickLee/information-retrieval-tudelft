@@ -69,7 +69,7 @@ public class DocumentIndex implements Serializable {
         	return TermPosting.STOP_WORD_LIST;
         }
         
-        term = PermutermFacilities.translateToPostfixWildcard(term);
+        term = PermutermFacilities.shiftWildCardToEnd(term);
     	List<Integer> result = new ArrayList<Integer>();
         
     	if (!PermutermFacilities.isPostfixWildcard(term)) {
@@ -80,10 +80,15 @@ public class DocumentIndex implements Serializable {
     	} else {
     		// retreive all the posting lists that match the wildcard
     		term = PermutermFacilities.removePostfixWildcard(term);
+//    		term.index
+    		
     		Map.Entry<String, TermPosting> entry = termPostings.ceilingEntry(term);
     		if (entry == null) return Collections.emptyList();
-
-    		String regex = term.replace("$", "\\$") + ".*";
+    		
+    		
+    		String regex = term.replace("$", "\\$") + "*";
+    		regex = regex.replaceAll("\\*", ".\\*");
+    		System.out.println(regex);
     		if (Pattern.matches(regex, entry.getKey()))
     			result.addAll(entry.getValue().postingList.keySet());
     		
@@ -101,7 +106,7 @@ public class DocumentIndex implements Serializable {
     public TermPosting getTermPosting (String term){
 // TODO permuterm
     	if (term == null) return null;
-    	term = PermutermFacilities.translateToPostfixWildcard(term);
+    	term = PermutermFacilities.shiftWildCardToEnd(term);
     	TermPosting tp = termPostings.get(term);
         return tp;
     }
@@ -136,20 +141,20 @@ public class DocumentIndex implements Serializable {
             while (it.hasNext()) {
                 term = (String) it.next();
                 Integer termFrequency = terms.get(term);
-
-                String permuterm = PermutermFacilities.translateToPostfixWildcard(term);
-                TermPosting tp = termPostings.get(permuterm);
-                if (tp == null) {
-                    tp = new TermPosting(term);
-                }
-                
-                tp.postingList.put(docid, termFrequency);
-                tp.termFrequencySum += termFrequency;
-                tp.documentFrequency++;
+//
+//                String permuterm = PermutermFacilities.shiftWildCardToEnd(term);
+//                TermPosting tp = termPostings.get(permuterm);
+//                if (tp == null) {
+//                    tp = new TermPosting(term);
+//                }
+//                
+//                tp.postingList.put(docid, termFrequency);
+//                tp.termFrequencySum += termFrequency;
+//                tp.documentFrequency++;
                 
                 //soundex
                 //System.out.println("- " + term + " -");
-                 
+                TermPosting tp = termPostings.get(term);
                 Soundex.addSoundex(term, tp);
                 
                 //term = PermutermFacilities.translateToPostfixWildcard(term);
