@@ -18,13 +18,18 @@ public class TokenAnalyzer {
     private Scanner scanner;
     /** An array containing some common English words that are not usually useful
     for searching. */
+//    public static final String[] STOP_WORDS = {
+//        "a", "and", "are", "as", "at", "be", "but", "by",
+//        "for", "if", "in", "into", "is", "it",
+//        "no", "not", "of", "on", "or", "s", "such",
+//        "t", "that", "the", "their", "then", "there", "these",
+//        "they", "this", "to", "was", "will", "with"
+//    };
+    
     public static final String[] STOP_WORDS = {
-        "a", "and", "are", "as", "at", "be", "but", "by",
-        "for", "if", "in", "into", "is", "it",
-        "no", "not", "of", "on", "or", "s", "such",
-        "t", "that", "the", "their", "then", "there", "these",
-        "they", "this", "to", "was", "will", "with"
+        "and", "or", "not"
     };
+    
     private static HashSet stopTable;
     public static final String DOCUMENT_DELIMITER = "[ |\\\"\\-_,\r\n\t?!;:<>{}\\[\\]=+/%&()'" + PermutermFacilities.PERMUTERM_SYMBOL + "]+";
     

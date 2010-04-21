@@ -14,7 +14,7 @@ import query.Query;
 
 public class CosineRanker {
 	
-	static private double MIN_SPECIALITY = 2;
+	static private double MIN_SPECIALITY = 1;
 
 	private CosineRanker(){}
 	
@@ -84,10 +84,14 @@ public class CosineRanker {
 		int i = 0;
 		while(i < queryTerms.size()){
 			if (speciality(queryTerms.get(i)) < CosineRanker.MIN_SPECIALITY)
-				queryTerms.remove(i);
+				{
+					System.out.print(queryTerms.get(i) + ", ");
+					queryTerms.remove(i);
+				}
 			else
 				i++;
 		}
+		System.out.println();
 	}
 	
 	private static List<Integer> fullyClone (List<Integer> toBeCloned){

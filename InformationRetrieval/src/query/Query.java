@@ -147,8 +147,12 @@ public class Query {
                System.out.println("Did you mean: " + soundex);
            try { 								// Try boolean
                Query q = new Query(input);
-               List<Integer> r = q.getResult();
+               List<Integer> r = q.getResult(); 
                System.out.println(r);
+               
+               if (!input.trim().contains(" "))
+            	   throw new RuntimeException();
+
            } catch (Exception ex) { 			// Bag of words
 
         	   if(input.contains("*")){
@@ -164,6 +168,7 @@ public class Query {
                    System.out.println("High-idf turned off:");
                    System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, false));
                    System.out.println("High-idf turned on:");
+                   System.out.println("Ignored term(s): ");
                    System.out.println(CosineRanker.rankingResults(queryParsed, K_TOP, true));
         	   }
            }
