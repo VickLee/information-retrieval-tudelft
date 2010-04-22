@@ -37,9 +37,9 @@ public final class PermutermFacilities {
 		}
 
 		if (count > 1) {
-			System.out.println(String.format(
+			/*System.out.println(String.format(
 									"More than 1 wildcard char found in token '%s', removing all of them.",
-									text));
+									text));*/
 			count = 0;
 			pos = -1;
 			text = text.replaceAll("[*]", "");
@@ -69,15 +69,17 @@ public final class PermutermFacilities {
 		return term;
 	}
 
-//	public static String shiftWildCardToEnd(String input) {
-//
+	public static String shiftWildCardToEnd(String input) {
+		
+		if(!input.contains("*"))
+			return input;
 //		if (input.lastIndexOf(WILDCARD_SYMBOL) != input
 //				.indexOf(WILDCARD_SYMBOL))
 //			throw new RuntimeException("more than one '*'");
-//		int wildCardIndex = input.indexOf(WILDCARD_SYMBOL) + 1;
-//		return input.substring(wildCardIndex) + PERMUTERM_SYMBOL
-//				+ input.substring(0, wildCardIndex);
-//	}
+		int wildCardIndex = input.indexOf(WILDCARD_SYMBOL) + 1;
+		return input.substring(wildCardIndex) + PERMUTERM_SYMBOL
+				+ input.substring(0, wildCardIndex);
+	}
 //
 //	public static void main(String[] args) {
 //		String str = "Hello";
@@ -96,5 +98,10 @@ public final class PermutermFacilities {
 						+ term.substring(0, term.length() - 1));
 			}
 			return result;
-		}
+	}
+	
+	public static void main (String [] args){
+		
+		System.out.println(translateToPostfixWildcard("dtrfyui"));
+	}
 }

@@ -29,7 +29,7 @@ public class TestApp {
 					"english" + "Stemmer");
         SnowballStemmer stemmer = (SnowballStemmer) stemClass.newInstance();
         
-        stemmer.setCurrent("ag*cu*al");
+        stemmer.setCurrent("calderon*deronal");
         stemmer.stem();
         System.out.println(stemmer.getCurrent());
 

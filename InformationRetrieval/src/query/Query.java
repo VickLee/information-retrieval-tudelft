@@ -20,9 +20,7 @@ import ranking.CosineRanker;
 import soundex.Soundex;
 
 public class Query {
-   public static int K_TOP = 400;
-   public static int MODE_BOOLEAN  = 0;
-   public static int MODE_BAG_OF_WORDS = 1;
+   public static int K_TOP = 20;
 
 
    private CommonTree tree;
@@ -154,15 +152,18 @@ public class Query {
        DocumentIndex.stemming = true;
        manageDB("reuters_stemmed.db");
 
-       
-       //TODO get stemming
        DocumentIndex.stemming = true;
+       //TODO get stemming
+      
        
        while (true) {
            Scanner in = new Scanner(System.in);
 
               // Reads a single line from the console
               // and stores into name variable
+//           DocumentIndex.stemming = !DocumentIndex.stemming;////////////////////////////////////////////
+           System.out.println("Stemming is " + (DocumentIndex.stemming ? "on" : "off"));
+           
            
            System.out.print("Query > ");
            String input = in.nextLine();
@@ -186,6 +187,7 @@ public class Query {
 		File db = new File(dbName);
 	       // DocumentIndex index = null;
 	
+		System.out.println( DocumentIndex.stemming ? "Stemming:" : "");
 	       if (!db.exists()) {
 	    	   
 	           System.out.println("Creating index...");

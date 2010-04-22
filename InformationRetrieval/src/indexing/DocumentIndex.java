@@ -86,15 +86,45 @@ public class DocumentIndex implements Serializable {
         	return TermPosting.STOP_WORD_LIST;
         }
         
+        String moreThanOneWildCard = term;
+        moreThanOneWildCard = PermutermFacilities.shiftWildCardToEnd(moreThanOneWildCard);
         term = PermutermFacilities.translateToPostfixWildcard(term);
     	List<Integer> result = new ArrayList<Integer>();
         
-    	if (!PermutermFacilities.isPostfixWildcard(term)) {
+    	if (!PermutermFacilities.isPostfixWildcard(moreThanOneWildCard)) {
     		TermPosting tp = termPostings.get(term);
     		if (tp == null) return Collections.emptyList();
     		
     		result.addAll(tp.postingList.keySet());
-    	} else {
+    	} 
+    	else if (moreThanOneWildCard.indexOf("*") != moreThanOneWildCard.lastIndexOf("*")) {
+    		// retreive all the posting lists that match the wildcard
+    		moreThanOneWildCard = PermutermFacilities.removePostfixWildcard(moreThanOneWildCard);
+    		
+    		String otherWildCards = moreThanOneWildCard.substring(0, moreThanOneWildCard.lastIndexOf("*")); // from 0 to '*' excluded
+    		moreThanOneWildCard = moreThanOneWildCard.substring(moreThanOneWildCard.lastIndexOf("*")+1); // from '*' excluded to end
+    		
+    		Map.Entry<String, TermPosting> entry = termPostings.ceilingEntry(moreThanOneWildCard);
+    		if (entry == null) return Collections.emptyList();
+    		
+    		
+    		String regex = moreThanOneWildCard.replace("$", "\\$") + "*";
+    		regex = regex.replaceAll("\\*", ".\\*");
+    		String regexRestofWildCards = ".*" + otherWildCards.replaceAll("\\*",".\\*") + ".*" ;
+    		System.out.println(regex);
+    		if (Pattern.matches(regex, entry.getKey()) && Pattern.matches(regexRestofWildCards, entry.getKey()))
+    			result.addAll(entry.getValue().postingList.keySet());
+    		
+    		while ((entry = termPostings.higherEntry(entry.getKey())) != null && Pattern.matches(regex, entry.getKey()) ) {
+    			
+    			if(Pattern.matches(regexRestofWildCards, entry.getKey())){
+        			List<Integer> result2 = new ArrayList(entry.getValue().postingList.keySet());
+        			result = TermPosting.orLists(result, result2);
+    			}
+    		}
+    		   		
+    	} 
+    	else {
     		// retreive all the posting lists that match the wildcard
     		term = PermutermFacilities.removePostfixWildcard(term);
     		Map.Entry<String, TermPosting> entry = termPostings.ceilingEntry(term);
@@ -166,6 +196,8 @@ public class DocumentIndex implements Serializable {
                 tp.postingList.put(docid, termFrequency);
                 tp.termFrequencySum += termFrequency;
                 tp.documentFrequency++;
+                
+                tp.nonStemmedTerms = TokenAnalyzer.stemmedToNonStemmed.get(TokenAnalyzer.stem(term));
                 
                 //System.out.println("- " + term + " -");
                  

@@ -47,7 +47,7 @@ public class TokenAnalyzer {
         }
     }
     
-//    public static HashMap<String, List<String>> stemmedToNonStemmed = new HashMap<String, List<String>>();
+    public static HashMap<String, List<String>> stemmedToNonStemmed = new HashMap<String, List<String>>();
     
    
 
@@ -92,24 +92,28 @@ public class TokenAnalyzer {
 //        			? PermutermFacilities.shiftWildCardToEnd(term)
 //        			: term;
 // ---------------------------------------------------
-        
- //       String stemmed = Stem(term);
-      
-//        if (!isQuery)
-//        {
-//        	List<String> beforeStemmingWord;
-//        	if (!stemmedToNonStemmed.containsKey(stemmed))
-//    		{
-//    			beforeStemmingWord = new ArrayList<String>();
-//    			stemmedToNonStemmed.put(stemmed, beforeStemmingWord);
-//    		}
-//        	
-//        	stemmedToNonStemmed.get(stemmed).add(term);        	
-//        }
-//        return stemmed;
+
+        if (DocumentIndex.stemming)
+        	createStemmedToNonStemmedMap(term);
         
         return DocumentIndex.stemming ? stem(term) : term;
     }
+
+private void createStemmedToNonStemmedMap(String term) {
+	
+	String stemmed = stem(term);
+   
+	
+	List<String> beforeStemmingWord;
+	if (!stemmedToNonStemmed.containsKey(stemmed))
+	{
+		beforeStemmingWord = new ArrayList<String>();
+		stemmedToNonStemmed.put(stemmed, beforeStemmingWord);
+	}
+	
+	stemmedToNonStemmed.get(stemmed).add(term);        	
+	
+}
     
     public static boolean isStopWord(String term) {
     	term = term.replaceAll("" + PermutermFacilities.PERMUTERM_SYMBOL, "");

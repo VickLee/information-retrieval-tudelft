@@ -86,6 +86,19 @@ public class Soundex {
 			DocumentIndex.instance().getSoundIndex().get(soundex).add(tp);
 	}
     
+    private static String getSimilarWordWithShortestLengthFromStemmingList(TermPosting termPosting)
+    {
+    	if (termPosting.nonStemmedTerms == null || termPosting.nonStemmedTerms.size() == 0)
+    		return termPosting.term;
+    	String term = termPosting.nonStemmedTerms.get(0);
+    	
+    	for (String str : termPosting.nonStemmedTerms)
+    		if (str.length() < term.length())
+    			term = str;
+    	
+    	return term;
+    }
+    
     private static String findMostCommonSimilarTerm(String term)
     {
     	List<TermPosting> similarWords = DocumentIndex.instance().getSoundIndex().get(soundex(term));
@@ -103,7 +116,11 @@ public class Soundex {
     	
     	TermPosting originalTerm = DocumentIndex.instance().getTermPosting(term);
     	if (originalTerm == null || max.termFrequencySum >= THRESHOLD * originalTerm.termFrequencySum)
+    	{
+    		if (DocumentIndex.stemming)
+    			return getSimilarWordWithShortestLengthFromStemmingList(max);	
     		return max.term;
+    	}
     	return term;
     }
     

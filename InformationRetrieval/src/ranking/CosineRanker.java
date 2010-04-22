@@ -58,7 +58,7 @@ public class CosineRanker {
 					docIDtoScore.put(i, d + docIDtoScore.get(i));
 			}
 			
-			DocumentIndex.instance().getTermPosting(term);
+//			DocumentIndex.instance().getTermPosting(term);
 		}
 		
 		for(Integer i : docIDtoScore.keySet()){
